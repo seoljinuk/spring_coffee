@@ -1,0 +1,12 @@
+제04장-02.회원 1명 추가 테스트
+# 로그인 기능
+pom.xml
+    security 의존성 추가
+SecurityConfig 파일
+    passwordEncoder() 메소드 추가
+MemberRepository 파일
+    인터페이스로 생성하기
+MemberTest 작성
+    insertMember() 메소드 추가
+데이터 베이스에서 조회하기
+    select * from members ;
