@@ -1,5 +1,12 @@
+# 리액트 관련 라이브러리 설치
+npm install axios
+npm install react-router-dom
+npm install bootstrap
+npm install react-bootstrap
+
+
 제04장-02.회원 1명 추가 테스트
-# 로그인 기능
+# 회원 1명 추가하기
 pom.xml
     security 의존성 추가
 SecurityConfig 파일
@@ -10,3 +17,49 @@ MemberTest 작성
     insertMember() 메소드 추가
 데이터 베이스에서 조회하기
     select * from members ;
+
+
+제04장-03. 로그인/로그아웃 기능 구현
+pom.xml
+    jwt 의존성 추가(3개)
+MemberRepository 파일
+    findByEmail() 메소드 추가
+MemberDetailsService 작성
+    loadUserByUsername() 메소드 추가
+LoginRequest 작성
+    로그인 요청 객체
+LoginResponse 작성
+    로그인 응답 객체
+JwtTokenProvider 작성
+    JWT 생성, 검증 기능 담당자 클래스
+    createToken(String email) 메소드 추가
+    getEmail(String token) 메소드 추가
+    getSigningKey() 메소드 추가
+LoginController 작성
+    login() 메소드 추가
+JwtAuthenticationFilter 작성
+    resolveToken(HttpServletRequest request) 메소드 추가
+    doFilterInternal() 메소드 추가
+SecurityConfig 파일
+    SecurityConfig() 생성자 주입
+    jwtAuthenticationFilter() 메소드 추가
+    filterChain(HttpSecurity http) 메소드 추가
+    authenticationManager() 메소드 추가
+
+# React Section
+index.css
+    다음 2개의 속성을 주석으로 막을 것.
+    body {
+        /* display: flex;
+        place-items: center; */
+    }
+LoginResponse.ts 작성
+axiosInstance.tsx 작성
+LoginPage.tsx 작성
+User.ts 작성
+App.tsx 수정
+MenuItems.tsx 수정
+AppRouters.tsx 수정
+    LoginPage 라우터 추가
+
+제04장-04. 회원 가입 기능 구현
