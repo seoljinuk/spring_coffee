@@ -81,10 +81,17 @@ Product 작성
 제05장-02. 상품 등록(단위 테스트)
 이미지 파일 복사
     c:\shop\images 폴더에 boot_images.zip 압축 해제 후 복사하기
-
 레포지터리 작성 : ProductRepository
-
-
+데이터 생성기 클래스
+	GenerateData 유틸 클래스
+단위 테스트 코드 작성
+    ProductTest 클래스
+        createProductMany() 메소드
+단위 테스트하기
+    createProductMany() 메소드 실행하기
+데이터 베이스 확인
+    select count(*) from products ;
+    # 대략 60여개가 출력됩니다.
 
 
 
