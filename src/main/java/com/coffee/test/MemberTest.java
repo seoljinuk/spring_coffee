@@ -4,11 +4,14 @@ import com.coffee.constant.Role;
 import com.coffee.entity.Member;
 import com.coffee.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.time.LocalDate;
 
 @SpringBootTest
 @RequiredArgsConstructor
@@ -19,21 +22,38 @@ public class MemberTest {
     private PasswordEncoder passwordEncoder;
 
     @Test
+    @DisplayName("회원 몇 명 추가하기")
     void insertMember() {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        // 회원 몇 명을 추가해 봅니다.
+        Member mem01 = new Member();
+        mem01.setName("관리자");
+        mem01.setEmail("admin@naver.com");
+        mem01.setPassword(passwordEncoder.encode("Admin@123"));
+        mem01.setAddress("마포구 공덕동");
+        mem01.setRole(Role.ADMIN);
+        mem01.setRegdate(LocalDate.now());
 
-        Member member = new Member();
-        member.setEmail("bluesky@naver.com");
-        member.setPassword(passwordEncoder.encode("bluesky@456")); // 암호화
-        member.setRole(Role.USER); // enum 타입이라 가정
-        member.setName("aa");
-        member.setAddress("bb");
+        memberRepository.save(mem01) ; // 데이터 베이스에 인서트
+        System.out.println("----------------------------------------");
 
-        memberRepository.save(member);
+        Member mem02 = new Member();
+        mem02.setName("유영석");
+        mem02.setEmail("bluesky@naver.com");
+        mem02.setPassword(passwordEncoder.encode("Bluesky@456"));
+        mem02.setAddress("용산구 이태원동");
+        mem02.setRole(Role.USER);
+        mem02.setRegdate(LocalDate.now());
+        memberRepository.save(mem02) ;
+        System.out.println("----------------------");
 
-        System.out.println("테스트 회원 생성 완료");
-
-        System.out.println(encoder.encode("1234"));
-        // [$2a$10$utrireEWqMN0hyEmPBas5e/OmfUNYnHjwWIwMufoFz7ZrxKV1IDDi]
+        Member mem03 = new Member();
+        mem03.setName("곰돌이");
+        mem03.setEmail("gomdori@naver.com");
+        mem03.setPassword(passwordEncoder.encode("Gomdori@789"));
+        mem03.setAddress("동대문구 휘경동");
+        mem03.setRole(Role.USER);
+        mem03.setRegdate(LocalDate.now());
+        memberRepository.save(mem03) ;
+        System.out.println("----------------------");
     }
 }

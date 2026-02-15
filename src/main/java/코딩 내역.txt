@@ -35,7 +35,7 @@ JwtTokenProvider 작성
     createToken(String email) 메소드 추가
     getEmail(String token) 메소드 추가
     getSigningKey() 메소드 추가
-LoginController 작성
+MemberController 작성
     login() 메소드 추가
 JwtAuthenticationFilter 작성
     resolveToken(HttpServletRequest request) 메소드 추가
@@ -63,3 +63,11 @@ AppRouters.tsx 수정
     LoginPage 라우터 추가
 
 제04장-04. 회원 가입 기능 구현
+MemberService 작성
+MemberController 작성
+    signup() 메소드 추가
+
+# React Section
+AppRouters.tsx 수정
+    SignupPage 라우터 추가
+SignupPage.tsx 작성

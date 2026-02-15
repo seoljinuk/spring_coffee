@@ -15,7 +15,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-// Spring Security에서 요청(Request)이 들어올 때 JWT를 검사하는 역할을 하는 필터(Interceptor)
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -23,13 +22,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final MemberDetailsService memberDetailsService;
 
     private String resolveToken(HttpServletRequest request) {
-
         String bearerToken = request.getHeader("Authorization");
-
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
-
         return null;
     }
 
@@ -39,25 +35,31 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
+        String path = request.getRequestURI();
+
+        // permitAll 경로
+        if (path.equals("/member/signup") || path.equals("/member/login") || path.startsWith("/fruit/")) {
+            SecurityContextHolder.clearContext(); // SecurityContext 초기화
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String token = resolveToken(request);
 
         if (token != null && jwtTokenProvider.validateToken(token)) {
-
             String email = jwtTokenProvider.getEmail(token);
+            UserDetails userDetails = memberDetailsService.loadUserByUsername(email);
 
-            UserDetails userDetails =
-                    memberDetailsService.loadUserByUsername(email);
-
-            Authentication auth =
-                    new UsernamePasswordAuthenticationToken(
-                            userDetails,
-                            "",
-                            userDetails.getAuthorities()
-                    );
+            Authentication auth = new UsernamePasswordAuthenticationToken(
+                    userDetails,
+                    "",
+                    userDetails.getAuthorities()
+            );
 
             SecurityContextHolder.getContext().setAuthentication(auth);
+            filterChain.doFilter(request, response);
+        } else {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "JWT Token is missing or invalid");
         }
-
-        filterChain.doFilter(request, response);
     }
 }
