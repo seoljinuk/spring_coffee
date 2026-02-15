@@ -71,3 +71,31 @@ MemberController 작성
 AppRouters.tsx 수정
     SignupPage 라우터 추가
 SignupPage.tsx 작성
+
+제05장-01. 상품 공통 사항
+Category 열거형 타입 정의
+Product 작성
+데이터 베이스 확인
+    desc products; 명령어 사용
+
+제05장-02. 상품 등록(단위 테스트)
+이미지 파일 복사
+    c:\shop\images 폴더에 boot_images.zip 압축 해제 후 복사하기
+
+레포지터리 작성 : ProductRepository
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
