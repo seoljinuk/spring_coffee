@@ -51,7 +51,9 @@ public class MemberController {
         String token = jwtTokenProvider.createToken(request.getEmail());
 
         // 실제로는 DB에서 Member 조회하는 것이 더 정확함
-        Role role = Role.USER ;//.toString();
+        //Role role = Role.USER ;//.toString();
+
+        Role role = member.getRole();
 
         System.out.println("로그인 성공");
         System.out.println("토큰 : " + token);
