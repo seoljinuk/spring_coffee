@@ -135,6 +135,34 @@ Product 작성
     select * from products where product_id = 상품번호 ;
 
 
+제05장-05. 상품 등록
+메뉴 목록 구성
+    MenuItems.tsx 파일
+        <Nav.Link onClick={() => navigate(`/product/insert`)}>상품 등록</Nav.Link>
+라우팅 설정
+    AppRouters.tsx 파일
+등록 페이지 작성
+    ProductInsertForm.tsx 파일
+application.properties 파일
+    productImageLocation=C:\\shop\\images\\ 항목 추가
+서비스
+    private String productImageLocation; 변수
+    private String saveProductImage(String base64Image) 메소드
+    public Product insertProduct(Product product) 메소드
+컨트롤러
+    public ResponseEntity<?> insert(@Valid @RequestBody Product product, BindingResult bindingResult) 메소드
+테스트 시나리오
+테스트 시나리오 요약
+    1.	이미지 업로드 확인
+        상품 등록 시 서버의 이미지 폴더에 "product_"로 시작하는 파일이 생성되는지 확인합니다.
+
+    2.	데이터베이스 반영 확인
+        상품 등록 후 products 테이블에 새로운 1행이 추가되었는지 확인합니다.
+        예시 SQL: select * from products order by product_id desc ;
+
+    3.	화면 표시 확인
+        상품 목록 1페이지에서 등록한 상품의 이미지가 정상적으로 표시되는지 확인합니다.
+
 
 
 

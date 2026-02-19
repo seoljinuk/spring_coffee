@@ -2,12 +2,18 @@ package com.coffee.controller;
 
 import com.coffee.entity.Product;
 import com.coffee.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/product")
@@ -40,6 +46,51 @@ public class ProductController {
 
         }catch (Exception err){
             return ResponseEntity.internalServerError().body("오류 발생 : " + err.getMessage());
+        }
+    }
+
+    @PostMapping("/insert")
+    public ResponseEntity<?> insert(@Valid @RequestBody Product product, BindingResult bindingResult) {
+        // ✅ 1. 유효성 검사 실패 시
+        if (bindingResult.hasErrors()) {
+            System.out.println("bindingResult");
+            System.out.println(bindingResult);
+            Map<String, String> errors = new HashMap<>();
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                errors.put(error.getField(), error.getDefaultMessage());
+            }
+
+            // 400 Bad Request + 에러 메시지
+            return new ResponseEntity<>(
+                    Map.of(
+                            "message", "상품 등록 유효성 검사에 문제가 있습니다.",
+                            "errors", errors
+                    ),
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+
+        // ✅ 2. 상품 등록 시도
+        try {
+            Product savedProduct = productService.insertProduct(product);
+            return ResponseEntity.ok(Map.of(
+                    "message", "Product insert successfully",
+                    "image", savedProduct.getImage()
+            ));
+        } catch (IllegalStateException ex) { // 경로 또는 이미지 저장 문제
+            return ResponseEntity
+                    .status(500)
+                    .body(Map.of(
+                            "message", ex.getMessage(),
+                            "error", "File saving error"
+                    ));
+        } catch (Exception err) { // DB 오류 등
+            return ResponseEntity
+                    .status(500)
+                    .body(Map.of(
+                            "message", err.getMessage(),
+                            "error", "Internal Server Error"
+                    ));
         }
     }
 }
