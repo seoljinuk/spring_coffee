@@ -35,17 +35,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
-        String path = request.getRequestURI();
-
-        // permitAll 경로
-        if (path.equals("/member/signup") || path.equals("/member/login") || path.startsWith("/fruit/")) {
-            SecurityContextHolder.clearContext(); // SecurityContext 초기화
-            filterChain.doFilter(request, response);
-            return;
-        }
-
         String token = resolveToken(request);
 
+        // 토큰이 있을 때만 인증 처리
         if (token != null && jwtTokenProvider.validateToken(token)) {
             String email = jwtTokenProvider.getEmail(token);
             UserDetails userDetails = memberDetailsService.loadUserByUsername(email);
@@ -57,9 +49,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             );
 
             SecurityContextHolder.getContext().setAuthentication(auth);
-            filterChain.doFilter(request, response);
-        } else {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, "JWT Token is missing or invalid");
         }
+
+        // ❗ 무조건 다음 필터로 넘김
+        filterChain.doFilter(request, response);
     }
 }

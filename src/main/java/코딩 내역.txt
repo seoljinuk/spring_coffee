@@ -94,6 +94,37 @@ Product 작성
     # 대략 60여개가 출력됩니다.
 
 
+제05장-03. 상품 목록 페이지
+메뉴 목록 구성
+    MenuItems.tsx 수정
+        <Nav.Link onClick={() => navigate(`/product/list`)}>상품 보기</Nav.Link>
+라우팅 설정
+    AppRouters.js 수정
+        import ProductList from './../pages/ProductList';
+        <Route path='/product/list' element={<ProductList user={user} />} />
+상품 목록 페이지 작성
+    ProductList.tsx 신규 작성
+레포지터리 작성
+    ProductRepository 수정
+        List<Product> findProductByOrderByIdDesc();
+서비스 작성
+    ProductService 신규
+        public List<Product> getProductList()
+컨트롤러 작성
+    ProductController 신규
+        public List<Product> list() 메소드
+테스트하기
+
+
+
+
+
+
+
+
+
+
+
 
 
 
