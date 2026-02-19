@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -80,5 +81,54 @@ public class ProductService {
 
         // save() 메소드는 CrudRepository에 포함되어 있습니다.
         return productRepository.save(product);
+    }
+
+    // 상품 수정하기 get 방식 시작
+    public Product getProductById(Long id) {
+        // findById() 메소드는 CrudRepository에 포함되어 있습니다.
+        // 그리고, Optional<>을 반환합니다.
+        // Optional : 해당 상품이 있을 수도 있지만, 경우에 따라서 없을 수도 있습니다.
+        Optional<Product> product = this.productRepository.findById(id);
+
+        // 의미 있는 데이터이면 그냥 넘기고, 그렇지 않으면 null을 반환해 줍니다.
+        return product.orElse(null);
+    }
+
+    // 상품 수정하기 put 방식 시작
+    public Optional<Product> findById(Long id) {
+        return productRepository.findById(id);
+    }
+
+    // 이전 이미지 파일을 삭제하는 메소드
+    private void deleteOldImage(String oldImageFileName) {
+        if (oldImageFileName == null || oldImageFileName.isBlank()) {
+            return;
+        }
+
+        File oldImageFile = new File(productImageLocation + oldImageFileName);
+
+        if (oldImageFile.exists()) {
+            boolean deleted = oldImageFile.delete();
+            if (!deleted) {
+                System.err.println("기존 이미지 삭제 실패 : " + oldImageFileName);
+            }
+        }
+    }
+
+    // Product 수정
+    public Product updateProduct(Product savedProduct, Product updatedProduct) {
+        savedProduct.setName(updatedProduct.getName());
+        savedProduct.setPrice(updatedProduct.getPrice());
+        savedProduct.setCategory(updatedProduct.getCategory());
+        savedProduct.setStock(updatedProduct.getStock());
+        savedProduct.setDescription(updatedProduct.getDescription());
+
+        if (updatedProduct.getImage() != null && updatedProduct.getImage().startsWith("data:image")) {
+            deleteOldImage(savedProduct.getImage());
+            String imageFileName = saveProductImage(updatedProduct.getImage());
+            savedProduct.setImage(imageFileName);
+        }
+
+        return productRepository.save(savedProduct);
     }
 }

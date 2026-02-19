@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/product")
@@ -90,6 +91,64 @@ public class ProductController {
                     .body(Map.of(
                             "message", err.getMessage(),
                             "error", "Internal Server Error"
+                    ));
+        }
+    }
+
+    // 상품 수정 페이지 get 방식
+    // 프론트 앤드의 상품 수정 페이지에서 요청이 들어 왔습니다.
+    @GetMapping("/update/{id}") // 상품의 id 정보를 이용하여 해당 상품 Bean 객체를 반환해 줍니다.
+    public ResponseEntity<Product> getUpdate(@PathVariable Long id){
+        System.out.println("수정할 상품 번호 : " + id);
+
+        Product product = this.productService.getProductById(id) ;
+
+        if(product == null){ // 상품이 없으면 404 응답과 함께 null을 반환
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+
+        }else{ // 해당 상품의 정보와 함께, 성공(200) 메시지를 반환합니다.
+            return ResponseEntity.ok(product);
+        }
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> putUpdate(@PathVariable Long id,
+                                       @Valid @RequestBody Product updatedProduct,
+                                       BindingResult bindingResult) {
+        // 1. 유효성 검사
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                errors.put(error.getField(), error.getDefaultMessage());
+            }
+            return new ResponseEntity<>(
+                    Map.of(
+                            "message", "상품 수정 유효성 검사에 문제가 있습니다.",
+                            "errors", errors
+                    ),
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+
+        // 2. 상품 조회
+        Optional<Product> findProduct = productService.findById(id);
+
+        if (findProduct.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        try {
+            Product savedProduct = findProduct.get();
+            productService.updateProduct(savedProduct, updatedProduct);
+
+            return ResponseEntity.ok(Map.of("message", "상품 수정 성공"));
+
+        } catch (Exception err) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of(
+                            "message", err.getMessage(),
+                            "error", "상품 수정 실패"
                     ));
         }
     }
