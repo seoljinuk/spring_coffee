@@ -35,4 +35,9 @@ public class MemberService {
         // 주의) Repository에서 인서트 작업은 save() 메소드를 사용합니다.
         memberRepository.save(bean);
     }
+
+    public Optional<Member> findMemberById(Long memberId) {
+        return this.memberRepository.findById(memberId);
+    }
+
 }

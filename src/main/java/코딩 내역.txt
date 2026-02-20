@@ -212,6 +212,7 @@ application.properties 파일
     상품을 클릭하여 상품 상세 페이지로 이동합니다.
     상품 정보들이 화면에 정확하게 반영되어 있는지, 확인합니다.
 
+
 제06장-01. 장바구니 공통 사항
 카트(Cart)
     Cart 신규 작성
@@ -224,15 +225,45 @@ application.properties 파일
 상품 상세 보기 페이지
     ProductDetail.tsx 파일
         quantity 스테이트와 QuantityChange 이벤트 핸들러 함수
-카트 상품  DTO
+        addToCart 함수
+        '장바구니' <Button>의 onClick 속성 추가
+카트 상품 DTO
+    CartProductDto 신규 작성
 서비스(Member)
+    MemberService 파일
+        public Optional<Member> findMemberById(Long memberId) 메소드
 서비스(Product)
+    ProductService 파일
+        public Optional<Product> findProductById(Long productId) 메소드
 리포지터리(Cart)
-서비스(Cart)
+    CartRepository 신규 작성
+        Optional<Cart> findByMember(Member member) 메소드
 리포지터리(CartProduct)
+    CartProductRepository 신규 작성
 서비스(CartProduct)
+    CartProductService 신규 작성
+        public void saveCartProduct(CartProduct cp) 메소드
+서비스(Cart)
+    CartService 신규 작성
+        private final CartRepository cartRepository ;
+        private final MemberService memberService ;
+        private final ProductService productService ;
+        private final CartProductService cartProductService ;
+        public Cart saveCart(Cart cart)
+        private CartProduct findExistingProduct(Cart cart, Product product)
+        public String addProductToCart(CartProductDto dto)
 컨트롤러(Cart)
+    CartController 신규 작성
+        public ResponseEntity<String> addToCart(@RequestBody CartProductDto dto) 메소드
 테스트 시나리오
+    사용자	상품 번호	담기 수량	최종 결과
+    유영석	1	5	상품 1번 8개
+            1	3	상품 2번 4개
+            2	4
+
+    곰돌이	1	4	상품 1번 4개
+            3	2	상품 3번 7개
+            3	5
 데이터 베이스 확인
 
 제06장-02. 내 장바구니 목록 보기
