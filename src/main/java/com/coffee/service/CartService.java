@@ -6,6 +6,8 @@ import com.coffee.entity.CartProduct;
 import com.coffee.entity.Member;
 import com.coffee.entity.Product;
 import com.coffee.repository.CartRepository;
+import com.coffee.repository.MemberRepository;
+import com.coffee.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,8 @@ public class CartService {
     private final MemberService memberService ;
     private final ProductService productService ;
     private final CartProductService cartProductService ;
+    private final MemberRepository memberRepository;
+    private final ProductRepository productRepository;
 
     public Cart saveCart(Cart cart) {
         return cartRepository.save(cart);
@@ -38,17 +42,23 @@ public class CartService {
     }
 
     @Transactional
-    public String addProductToCart(CartProductDto dto) {
-        // 1. 회원 및 상품 검증
-        Optional<Member> memberOptional = memberService.findMemberById(dto.getMemberId());
-        Optional<Product> productOptional = productService.findProductById(dto.getProductId());
+    public String addProductToCart(CartProductDto dto, String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("회원 없음"));
 
-        if (memberOptional.isEmpty() || productOptional.isEmpty()) {
-            throw new IllegalArgumentException("회원 또는 상품 정보가 올바르지 않습니다.");
-        }
+        Product product = productRepository.findById(dto.getProductId())
+                .orElseThrow(() -> new RuntimeException("상품 없음"));
 
-        Member member = memberOptional.get();
-        Product product = productOptional.get();
+//        // 1. 회원 및 상품 검증
+//        Optional<Member> memberOptional = memberService.findMemberById(dto.getMemberId());
+//        Optional<Product> productOptional = productService.findProductById(dto.getProductId());
+//
+//        if (memberOptional.isEmpty() || productOptional.isEmpty()) {
+//            throw new IllegalArgumentException("회원 또는 상품 정보가 올바르지 않습니다.");
+//        }
+//
+//        Member member = memberOptional.get();
+//        Product product = productOptional.get();
 
         // 2. 재고 확인
         if (product.getStock() < dto.getQuantity()) {

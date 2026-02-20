@@ -50,6 +50,7 @@ public class JwtTokenProvider { // JWT 생성, 검증 기능 담당자 클래스
                     .parseClaimsJws(token);
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }

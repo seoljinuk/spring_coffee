@@ -265,6 +265,22 @@ application.properties 파일
             3	2	상품 3번 7개
             3	5
 데이터 베이스 확인
+※ 회원 id 확인
+select member_id, email, name, role from members ;
+
+※ 카트 정보 확인
+select * from carts ;
+
+※ 카트 상품 정보 확인
+select * from cart_products ;
+
+※ 최종 결과 확인
+select m.member_id, m.name, c.cart_id, cp.cart_product_id, cp.product_id, cp.quantity, p.name, p.price, p.stock
+from ((members m join carts c
+on m.member_id = c.member_id) join cart_products cp
+on c.cart_id = cp.cart_id) join products p
+on cp.product_id = p.product_id ;
+
 
 제06장-02. 내 장바구니 목록 보기
 라우팅 설정
