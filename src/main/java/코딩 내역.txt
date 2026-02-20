@@ -194,18 +194,71 @@ application.properties 파일
     상품 목록 페이지에 수정된 정보가 보여야 합니다.
     과거에 업로드했던 이전 이미지를 삭제되어야 합니다.
 
+제05장-07. 상세 보기
+상품 목록 페이지
+    ProductList.tsx 파일
+        <Card className="h-100" onClick={() => navigate(`/product/detail/${item.id}`)}>
+라우팅 설정
+    AppRouters.tsx 수정
+        ProductDetail 라우터 추가
+        <Route path='/product/detail/:id' element={<ProductDetail user={user} />} />
+상품 상세 페이지 작성
+    ProductDetail.tsx 신규 작성
+컨트롤러 작성
+    public ResponseEntity<Product> detail(@PathVariable Long id) 메소드
+데이터 베이스 확인
+    select * from products where product_id = 상품번호 ;
+테스트 시나리오
+    상품을 클릭하여 상품 상세 페이지로 이동합니다.
+    상품 정보들이 화면에 정확하게 반영되어 있는지, 확인합니다.
 
+제06장-01. 장바구니 공통 사항
+카트(Cart)
+    Cart 신규 작성
+카트 상품(CartProduct)
+    CartProduct 신규 작성
+카트와 카트 상품 연계
+    mappedBy 속성에 대한 설명
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<CartProduct> cartProducts ;
+상품 상세 보기 페이지
+    ProductDetail.tsx 파일
+        quantity 스테이트와 QuantityChange 이벤트 핸들러 함수
+카트 상품  DTO
+서비스(Member)
+서비스(Product)
+리포지터리(Cart)
+서비스(Cart)
+리포지터리(CartProduct)
+서비스(CartProduct)
+컨트롤러(Cart)
+테스트 시나리오
+데이터 베이스 확인
 
+제06장-02. 내 장바구니 목록 보기
+라우팅 설정
+카트 목록(폼 양식)
+카트 목록(자바 스크립트)
+장바구니 품목 DTO
+서비스(Cart)
+컨트롤러(Cart)
+카트 목록(데이터 표시)
+카트 목록(전체 선택 기능)
+카트 목록(개별 선택 기능)
+테스트 시나리오
 
+제06장-03. 카트 상품 수량 변경하기
+카트 목록(수량 변경 함수)
+카트 목록(이벤트 연동)
+서비스(CartProduct)
+컨트롤러(Cart)
+테스트 시나리오
 
-
-
-
-
-
-
-
-
+제06장-04. 카트 상품 삭제 기능
+카트 목록(삭제 함수)
+서비스(CartProduct)
+컨트롤러(Cart)
+테스트 시나리오
 
 
 
