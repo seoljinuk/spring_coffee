@@ -284,11 +284,22 @@ on cp.product_id = p.product_id ;
 
 제06장-02. 내 장바구니 목록 보기
 라우팅 설정
+    AppRouters.js 수정
+        <Route path='/cart/list' element={<CartList user={user} />} />
 카트 목록(폼 양식)
+    CartList.tsx 신규 작성
 카트 목록(자바 스크립트)
+    cartProducts 배열 선언
+    useEffect Hook 사용
+    fetchCartProducts() 함수 구현
 장바구니 품목 DTO
+    CartItemDto 신규 작성
 서비스(Cart)
+    CartService 수정
+        public List<CartItemDto> getCartItemsByMemberId(Long memberId) 메소드
 컨트롤러(Cart)
+    CartController
+        public ResponseEntity<List<CartItemDto>> getCartProducts(@PathVariable Long memberId) 메소드
 카트 목록(데이터 표시)
 카트 목록(전체 선택 기능)
 카트 목록(개별 선택 기능)

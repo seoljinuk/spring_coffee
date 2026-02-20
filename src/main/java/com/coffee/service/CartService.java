@@ -1,5 +1,6 @@
 package com.coffee.service;
 
+import com.coffee.dto.CartItemDto;
 import com.coffee.dto.CartProductDto;
 import com.coffee.entity.Cart;
 import com.coffee.entity.CartProduct;
@@ -89,19 +90,19 @@ public class CartService {
         return "요청하신 상품이 장바구니에 추가되었습니다.";
     }
 
-//    /* 특정 회원의 카트 상품 목록 조회 */
-//    public List<CartItemDto> getCartItemsByMemberId(Long memberId) {
-//        // 1. 회원 조회
-//        Member member = memberService.findMemberById(memberId)
-//                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 회원입니다."));
-//
-//        // 2. 회원의 카트 조회
-//        Cart cart = cartRepository.findByMember(member)
-//                .orElseGet(Cart::new); // 없으면 빈 카트 생성
-//
-//        // 3. CartProduct → CartItemDto 변환
-//        return cart.getCartProducts().stream()
-//                .map(CartItemDto::new)
-//                .toList(); // Java 16 이상, 이전 버전은 collect(Collectors.toList())
-//    }
+    /* 특정 회원의 카트 상품 목록 조회 */
+    public List<CartItemDto> getCartItemsByMemberId(Long memberId) {
+        // 1. 회원 조회
+        Member member = memberService.findMemberById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 회원입니다."));
+
+        // 2. 회원의 카트 조회
+        Cart cart = cartRepository.findByMember(member)
+                .orElseGet(Cart::new); // 없으면 빈 카트 생성
+
+        // 3. CartProduct → CartItemDto 변환
+        return cart.getCartProducts().stream()
+                .map(CartItemDto::new)
+                .toList(); // Java 16 이상, 이전 버전은 collect(Collectors.toList())
+    }
 }
