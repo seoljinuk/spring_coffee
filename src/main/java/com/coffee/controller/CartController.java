@@ -32,38 +32,16 @@ public class CartController {
         return ResponseEntity.ok(message);
     }
 
-    //    @GetMapping("/list/{memberId}")// 특정 사용자의 `카트 상품` 목록을 조회합니다.
-//    public ResponseEntity<List<CartItemDto>> getCartProducts(@PathVariable Long memberId) {
-//        try {
-//            List<CartItemDto> cartProducts = cartService.getCartItemsByMemberId(memberId);
-//            System.out.println("카트 상품 개수 : " + cartProducts.size());
-//            return ResponseEntity.ok(cartProducts);
-//        } catch (IllegalArgumentException e) {
-//            return ResponseEntity.badRequest().build();
-//        }
-//    }
-    @GetMapping("/list/{memberId}")
-    public ResponseEntity<List<CartItemDto>> getCartProducts(
-            @PathVariable Long memberId,
-            Authentication authentication) {
+    @GetMapping("/list")
+    public ResponseEntity<List<CartItemDto>> getCartProducts(Authentication authentication) {
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String email = userDetails.getUsername();
+        String email = authentication.getName();
 
-        Optional<Member> loginMemberOpt = memberService.findByEmail(email);
+        Member member = memberService.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("사용자 없음"));
 
-        if (loginMemberOpt.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        Member loginMember = loginMemberOpt.get();
-
-        if (!loginMember.getId().equals(memberId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-
-        List<CartItemDto> cartProducts = cartService.getCartItemsByMemberId(memberId);
-
-        return ResponseEntity.ok(cartProducts);
+        return ResponseEntity.ok(
+                cartService.getCartItemsByMemberId(member.getId())
+        );
     }
 }

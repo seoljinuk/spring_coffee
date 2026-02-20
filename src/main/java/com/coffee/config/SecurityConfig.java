@@ -50,6 +50,7 @@ public class SecurityConfig {
                         .requestMatchers("/fruit/**").permitAll()
                         .requestMatchers("/product/**").permitAll()
                         .requestMatchers("/images/**").permitAll()
+                        .requestMatchers("/cart/**").authenticated()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()
                 )
